@@ -1,13 +1,14 @@
-# lein-get
+[[lein-get, lein-get]]
+= lein-get
 
 A Leiningen plugin to do many wonderful things.
 
-## Usage
+[[usage, Usage]]
+== Usage
 
 FIXME: Use this for user-level plugins:
 
-Put `[lein-get "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your `:user`
-profile.
+Put `[lein-get "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your `:user` profile.
 
 FIXME: Use this for project-level plugins:
 
@@ -15,9 +16,12 @@ Put `[lein-get "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your project.clj
 
 FIXME: and add an example usage that actually makes sense:
 
-    $ lein get
+....
+$ lein get
+....
 
-## License
+[[license, License]]
+== License
 
 Copyright © 2017 Ferdinand Hofherr
 
