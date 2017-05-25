@@ -1,0 +1,7 @@
+= Change Log
+
+All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
+
+== https://github.com/fhofherr/lein-get/compare/develop[Unreleased]
+
+=== Added
