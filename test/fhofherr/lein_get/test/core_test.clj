@@ -28,19 +28,20 @@
 (deftest get-dependency
   (testing "do nothing if vector contains no dependency spec"
     (let [get-typed-dependency (stub-fn get-typed-dependency
-                                        [project-root dep-spec])]
+                                        [project-root dep-name dep-spec])]
       (with-redefs [core/get-typed-dependency get-typed-dependency]
         (core/get-dependency "." ['some-dependency "0.10.15"])
         (is (invoked? get-typed-dependency :times 0)))))
 
   (testing "convert shorthand for local dependency"
     (let [get-typed-dependency (stub-fn get-typed-dependency
-                                        [project-root dep-spec])
+                                        [project-root dep-name dep-spec])
           dep-vec ['some-dependency
                    "0.10.15"
                    :get
                    "../relative/path/on/file/system"]
           expected-args {'project-root "."
+                         'dep-name 'some-dependency
                          'dep-spec {:type :leiningen-checkout
                                     :path {:scm :file
                                            :uri "../relative/path/on/file/system"}}}]
@@ -50,7 +51,7 @@
 
   (testing "pass complete dependency spec verbatim"
     (let [get-typed-dependency (stub-fn get-typed-dependency
-                                        [project-root dep-spec])
+                                        [project-root dep-name dep-spec])
           dep-vec ['some-dependency
                    "0.10.15"
                    :get
@@ -58,6 +59,7 @@
                     :path {:scm :file
                            :uri "../relative/path/on/file/system"}}]
           expected-args {'project-root "."
+                         'dep-name 'some-dependency
                          'dep-spec {:type :leiningen-checkout
                                     :path {:scm :file
                                            :uri "../relative/path/on/file/system"}}}]
@@ -66,7 +68,8 @@
         (is (invoked? get-typed-dependency :args expected-args)))))
 
   (testing "fail if dependency spec is neither string nor map"
-    (let [get-typed-dependency (stub-fn get-typed-dependency [dep-spec])
+    (let [get-typed-dependency (stub-fn get-typed-dependency
+                                        [project-root dep-name dep-spec])
           dep-vec ['some-dependency "0.10.15" :get 12345]]
       (is (thrown? IllegalArgumentException (core/get-dependency "." dep-vec)))
       (is (invoked? get-typed-dependency :times 0)))))

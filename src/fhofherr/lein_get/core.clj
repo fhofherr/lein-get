@@ -23,9 +23,11 @@
   Arguments:
 
   * `project-root`: path of the project's root directory.
+  * `dependency-name`: name of the dependency, i.e. the first item in the
+    dependency vector.
   * `dependency-spec`: map specifying how to get the dependency."
-  {:arglists '([project-root dependency-spec])}
-  #(:type %2))
+  {:arglists '([project-root dependency-name dependency-spec])}
+  #(:type %3))
 
 (defn get-dependency
   "Obtain the dependency specified by `dependency-vector` if it contains
@@ -44,10 +46,12 @@
     (cond
       (string? dependency-spec) (get-typed-dependency
                                  project-root
+                                 (first dependency-vector)
                                  {:type :leiningen-checkout
                                   :path {:scm :file
                                          :uri dependency-spec}})
       (map? dependency-spec) (get-typed-dependency project-root
+                                                   (first dependency-vector)
                                                    dependency-spec)
       :else (throw (IllegalArgumentException.
                     "Depencency spec must be either string or map.")))))
