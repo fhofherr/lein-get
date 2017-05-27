@@ -1,8 +1,10 @@
 (ns fhofherr.lein-get.fs
+  (:refer-clojure :exclude [remove])
   (:import [java.nio.file Files
                           Paths
                           Path
-                          LinkOption]))
+                          LinkOption]
+           [java.nio.file.attribute FileAttribute]))
 
 
 (defn path
@@ -63,6 +65,43 @@
   * `p`: path to check. May be either a `String` or a `java.nio.file.Path`."
   [p]
   (Files/isRegularFile (path p) (make-array LinkOption 0)))
+
+(defn symlink?
+  "Check if the path is a symlink.
+
+  Returns `true` if `p` is a symlink.
+
+  Arguments:
+
+  * `p`: path to check. May be either a `String` or a `java.nio.file.Path`."
+  [p]
+  (Files/isSymbolicLink p))
+
+(defn symlink
+  "Create a symlink from `link-target` to `link`.
+
+  Returns the path to the created symbolic link.
+
+  Arguments:
+
+  * `link-target`: the path the link should point to. May be either a `String`
+    or a `java.nio.file.Path`.
+  * `link`: the path of the link. May be either a `String` or a
+    `java.nio.file.Path`."
+  [link-target link]
+  (Files/createSymbolicLink (path link)
+                            (path link-target)
+                            (make-array FileAttribute 0)))
+
+(defn remove
+  "Delete the path `p`.
+
+  Arguments:
+
+  * `p`: the path to delete. May be either a `String` or a
+    `java.nio.file.Path`."
+  [p]
+  (Files/delete p))
 
 (defn resolve-path
   "Resolve `relative-path` against `root-path`.

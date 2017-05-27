@@ -30,6 +30,17 @@
       (is (true? (fs/file? file-path)))
       (is (false? (fs/file? dir-path))))))
 
+(deftest create-symlink
+  (testing "symlink directory"
+    (let [dir-path (fs/path "." "resources")
+          link (fs/path "." "dir-link-dont-commit")]
+      (try
+        (fs/symlink dir-path link)
+        (is (fs/directory? link))
+        (is (fs/symlink? link))
+        (finally
+          (fs/remove link))))))
+
 (deftest resolve-path
   (testing "resolve relative paths"
     (let [root-path (fs/get-cwd)
