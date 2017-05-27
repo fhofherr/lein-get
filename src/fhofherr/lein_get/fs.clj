@@ -34,14 +34,35 @@
 (defn exists?
   "Check if the path exists.
 
-  Returns `true` if the path exists.
+  Returns `true` if `p` exists.
 
   Arguments:
 
   * `p`: path to check. May be either a `String` or a `java.nio.file.Path`."
   [p]
-  (Files/exists (path p)
-                (make-array LinkOption 0)))
+  (Files/exists (path p) (make-array LinkOption 0)))
+
+(defn directory?
+  "Check if the path points to a directory.
+
+  Returns `true` if `p` points to a directory.
+
+  Arguments:
+
+  * `p`: path to check. May be either a `String` or a `java.nio.file.Path`."
+  [p]
+  (Files/isDirectory (path p) (make-array LinkOption 0)))
+
+(defn file?
+  "Check if the path points to a file.
+
+  Returns `true` if `p` points to a file.
+
+  Arguments:
+
+  * `p`: path to check. May be either a `String` or a `java.nio.file.Path`."
+  [p]
+  (Files/isRegularFile (path p) (make-array LinkOption 0)))
 
 (defn resolve-path
   "Resolve `relative-path` against `root-path`.

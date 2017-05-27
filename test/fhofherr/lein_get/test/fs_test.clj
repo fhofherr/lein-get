@@ -19,6 +19,17 @@
           p' (fs/path p "resources" "empty-file")]
       (is (= (str p') "./resources/empty-file")))))
 
+(deftest identify-directories-and-files
+  (let [dir-path (fs/path "." "resources")
+        file-path (fs/path "." "resources" "empty-file")]
+    (testing "identify directories"
+      (is (true? (fs/directory? dir-path)))
+      (is (false? (fs/directory? file-path))))
+
+    (testing "identify files"
+      (is (true? (fs/file? file-path)))
+      (is (false? (fs/file? dir-path))))))
+
 (deftest resolve-path
   (testing "resolve relative paths"
     (let [root-path (fs/get-cwd)
