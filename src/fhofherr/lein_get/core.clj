@@ -1,6 +1,5 @@
 (ns fhofherr.lein-get.core)
 
-
 (defn find-get-dependency-spec
   "Find the dependency spec in the passed `dependency-vector`. This function
   looks for the keyword `:get` and returns the value immediately following
@@ -15,8 +14,8 @@
     spec."
   [dependency-vector]
   (->> dependency-vector
-      (drop-while #(not= % :get))
-      second))
+       (drop-while #(not= % :get))
+       second))
 
 (defmulti get-typed-dependency
   "Get a project dependency based on the `dependency-spec`'s type.
@@ -43,14 +42,13 @@
   [project-root dependency-vector]
   (when-let [dependency-spec (find-get-dependency-spec dependency-vector)]
     (cond
-      (string? dependency-spec) (get-typed-dependency 
-                                  project-root
-                                  {:type :leiningen-checkout
-                                   :path {:scm :file
-                                          :uri dependency-spec}})
+      (string? dependency-spec) (get-typed-dependency
+                                 project-root
+                                 {:type :leiningen-checkout
+                                  :path {:scm :file
+                                         :uri dependency-spec}})
       (map? dependency-spec) (get-typed-dependency project-root
                                                    dependency-spec)
       :else (throw (IllegalArgumentException.
-                     "Depencency spec must be either string or map.")))))
-
+                    "Depencency spec must be either string or map.")))))
 

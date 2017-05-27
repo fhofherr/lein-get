@@ -1,11 +1,10 @@
 (ns fhofherr.lein-get.fs
   (:refer-clojure :exclude [remove])
   (:import [java.nio.file Files
-                          Paths
-                          Path
-                          LinkOption]
+            Paths
+            Path
+            LinkOption]
            [java.nio.file.attribute FileAttribute]))
-
 
 (defn path
   "Convert `p` into a `java.nio.file.Path`.

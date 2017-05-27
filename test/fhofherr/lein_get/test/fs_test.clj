@@ -3,7 +3,6 @@
             [fhofherr.lein-get.fs :as fs])
   (:import [java.nio.file Paths]))
 
-
 (deftest create-path
   (testing "return a path object verbatim"
     (let [p (Paths/get "." (make-array String 0))
