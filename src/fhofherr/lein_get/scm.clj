@@ -7,6 +7,8 @@
 
   Arguments:
 
+  * `project-root`: root directory of the project. May be either a `String` or
+    a `java.nio.file.Path`.
   * `scm-spec`: Map containing at least the keywords `:scm` and `:uri`. Defines
     location and type of the remote scm repository. 
   * `target-dir`: destination directory of the checkout. May be either a

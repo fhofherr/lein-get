@@ -18,12 +18,15 @@
 
   (testing "link source directory to target directory"
     (let [exists? (stub-fn exists? [p] false)
-          symlink (stub-fn symlink [link-target link])]
+          mkdir-p (stub-fn mkdir-p [p])
+          symlink (stub-fn symlink [link-target link])
+          link (fs/resolve-path "." "some/target/path")]
       (with-redefs [fs/exists? exists?
+                    fs/mkdir-p mkdir-p
                     fs/symlink symlink]
         (scm/checkout "."
                       {:scm :file :uri "some/src/path"}
                       "some/target/path")
+        (is (invoked? mkdir-p :args {'p (.getParent link)}))
         (is (invoked? symlink :args {'link-target "some/src/path"
-                                     'link (fs/resolve-path "."
-                                                            "some/target/path")}))))))
+                                     'link link}))))))

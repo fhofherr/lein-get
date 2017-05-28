@@ -117,3 +117,6 @@
   [root-path relative-path]
   (.. (path root-path relative-path)
       (normalize)))
+
+(defn mkdir-p
+  [p])

@@ -6,6 +6,7 @@
 
 (defmethod scm/checkout :file [project-root scm-spec target-dir]
   (let [resolved-target-dir (fs/resolve-path project-root target-dir)]
-    (if (fs/exists? resolved-target-dir)
-     (throw (FileAlreadyExistsException. (str resolved-target-dir)))
-     (fs/symlink (:uri scm-spec) resolved-target-dir))))
+    (when (fs/exists? resolved-target-dir)
+      (throw (FileAlreadyExistsException. (str resolved-target-dir))))
+    (fs/mkdir-p (.getParent resolved-target-dir))
+    (fs/symlink (:uri scm-spec) resolved-target-dir)))
