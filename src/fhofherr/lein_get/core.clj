@@ -1,4 +1,8 @@
-(ns fhofherr.lein-get.core)
+(ns fhofherr.lein-get.core
+  (:require [fhofherr.lein-get
+             [fs :as fs]
+             [scm :as scm]]
+            [fhofherr.lein-get.scm.file]))
 
 (defn find-get-dependency-spec
   "Find the dependency spec in the passed `dependency-vector`. This function
@@ -27,7 +31,16 @@
     dependency vector.
   * `dependency-spec`: map specifying how to get the dependency."
   {:arglists '([project-root dependency-name dependency-spec])}
-  #(:type %3))
+  (fn [_ _ dependency-spec] (:type dependency-spec)))
+
+(defmethod get-typed-dependency
+  :leiningen-checkout
+  [project-root dependency-name dependency-spec]
+  (let [target-dir (as-> dependency-name $
+                     (name $)
+                     (.replace $ "/" "-")
+                     (fs/path project-root "checkouts" $))]
+    (scm/checkout project-root (:path dependency-spec) target-dir)))
 
 (defn get-dependency
   "Obtain the dependency specified by `dependency-vector` if it contains

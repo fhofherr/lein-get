@@ -1,7 +1,10 @@
 (ns fhofherr.lein-get.test.core-test
   (:require [clojure.test :refer :all]
             [fhofherr.stub-fn.clojure.test :refer [stub-fn]]
-            [fhofherr.lein-get.core :as core]))
+            [fhofherr.lein-get
+             [core :as core]
+             [scm :as scm]
+             [fs :as fs]]))
 
 (deftest find-get-dependency-spec
   (testing "return nil if there is no spec"
@@ -73,3 +76,25 @@
           dep-vec ['some-dependency "0.10.15" :get 12345]]
       (is (thrown? IllegalArgumentException (core/get-dependency "." dep-vec)))
       (is (invoked? get-typed-dependency :times 0)))))
+
+(deftest get-leiningen-checkout-dependency
+  (let [project-root "."
+        dep-vec ['some-dependency
+                   "0.10.15"
+                   :get
+                   {:type :leiningen-checkout
+                    :path {:scm :file
+                           :uri "../relative/path/on/file/system"}}]
+        target-dir (fs/path project-root "checkouts" "some-dependency")]
+
+    (testing "create symlink to referenced project"
+      (let [checkout (stub-fn checkout [project-root scm-spec target-dir])]
+        (with-redefs [scm/checkout checkout]
+          (core/get-typed-dependency project-root
+                                     (first dep-vec)
+                                     (last dep-vec))
+          (is (invoked? checkout :args {'project-root project-root
+                                        'scm-spec (-> dep-vec
+                                                      last
+                                                      :path)
+                                        'target-dir target-dir})))))))
