@@ -100,7 +100,7 @@
   * `p`: the path to delete. May be either a `String` or a
     `java.nio.file.Path`."
   [p]
-  (Files/delete p))
+  (Files/delete (path p)))
 
 (defn resolve-path
   "Resolve `relative-path` against `root-path`.
