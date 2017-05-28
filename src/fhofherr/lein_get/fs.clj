@@ -3,7 +3,9 @@
   (:import [java.nio.file Files
             Paths
             Path
-            LinkOption]
+            LinkOption
+            SimpleFileVisitor
+            FileVisitResult]
            [java.nio.file.attribute FileAttribute]))
 
 (defn path
@@ -99,8 +101,17 @@
 
   * `p`: the path to delete. May be either a `String` or a
     `java.nio.file.Path`."
-  [p]
-  (Files/delete (path p)))
+  [p & {:keys [recursive] :or {recursive false}}]
+  (if (and recursive (directory? p))
+    (Files/walkFileTree (path p)
+                        (proxy [SimpleFileVisitor] []
+                          (visitFile [file _]
+                            (Files/delete file)
+                            FileVisitResult/CONTINUE)
+                          (postVisitDirectory [dir _]
+                            (Files/delete dir)
+                            (FileVisitResult/CONTINUE))))
+    (Files/delete (path p))))
 
 (defn resolve-path
   "Resolve `relative-path` against `root-path`.
@@ -119,4 +130,12 @@
       (normalize)))
 
 (defn mkdir-p
-  [p])
+  "Create a directory under path `p` and all missing intermediary directories.
+  Do nothing if `p` already exists.
+
+  Arguments:
+
+  * `p`: the directory to create. Either a `String` or a
+    `java.nio.file.Path`."
+  [p]
+  (Files/createDirectories (path p) (make-array FileAttribute 0)))

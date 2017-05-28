@@ -46,3 +46,21 @@
           relative-path "resources/empty-file"
           resolved (fs/resolve-path root-path relative-path)]
       (is (true? (fs/exists? resolved))))))
+
+(deftest mkdir-p
+
+  (testing "create missing directory"
+    (let [p (fs/path "." "dir-dont-commit" "subdir")]
+      (try
+        (fs/mkdir-p p)
+        (is (fs/directory? p))
+        (finally
+          (fs/remove (.getParent p) :recursive true)))))
+
+  (testing "ignore existing directories"
+    (let [p (fs/path "." "dir-dont-commit" "subdir")]
+      (try
+        (fs/mkdir-p p)
+        (fs/mkdir-p p)
+        (finally
+          (fs/remove (.getParent p) :recursive true))))))
