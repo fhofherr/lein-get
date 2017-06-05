@@ -4,7 +4,8 @@
             [fhofherr.lein-get
              [core :as core]
              [scm :as scm]
-             [fs :as fs]]))
+             [fs :as fs]
+             [io :as io]]))
 
 (deftest find-get-dependency-spec
   (testing "return nil if there is no spec"
@@ -87,9 +88,11 @@
                            :uri "../relative/path/on/file/system"}}]
         target-dir (fs/path project-root "checkouts" "some-dependency")]
 
-    (testing "create symlink to referenced project"
-      (let [checkout (stub-fn checkout [project-root scm-spec target-dir])]
-        (with-redefs [scm/checkout checkout]
+    (testing "symlink and install dependency"
+      (let [checkout (stub-fn checkout [project-root scm-spec target-dir])
+            sh (stub-fn sh [working-dir cmd])]
+        (with-redefs [scm/checkout checkout
+                      io/sh sh]
           (core/get-typed-dependency project-root
                                      (first dep-vec)
                                      (last dep-vec))
@@ -97,4 +100,7 @@
                                         'scm-spec (-> dep-vec
                                                       last
                                                       :path)
-                                        'target-dir target-dir})))))))
+                                        'target-dir target-dir}))
+
+          (is (invoked? sh :args {'working-dir target-dir
+                                  'cmd "lein install"})))))))

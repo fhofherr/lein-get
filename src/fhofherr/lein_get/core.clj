@@ -1,7 +1,8 @@
 (ns fhofherr.lein-get.core
   (:require [fhofherr.lein-get
              [fs :as fs]
-             [scm :as scm]]
+             [scm :as scm]
+             [io :as io]]
             [fhofherr.lein-get.scm.file]))
 
 (defn find-get-dependency-spec
@@ -40,7 +41,8 @@
                      (name $)
                      (.replace $ "/" "-")
                      (fs/path project-root "checkouts" $))]
-    (scm/checkout project-root (:path dependency-spec) target-dir)))
+    (scm/checkout project-root (:path dependency-spec) target-dir)
+    (io/sh target-dir "lein install")))
 
 (defn get-dependency
   "Obtain the dependency specified by `dependency-vector` if it contains
