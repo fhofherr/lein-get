@@ -8,6 +8,15 @@
             FileVisitResult]
            [java.nio.file.attribute FileAttribute]))
 
+(defn path?
+  "Check if `x` is an instance of `java.nio.file.Path`.
+
+  Arguments:
+
+  * `x`: object that may pa a `java.nio.file.Path`"
+  [x]
+  (instance? Path x))
+
 (defn path
   "Convert `p` into a `java.nio.file.Path`.
 
@@ -19,11 +28,13 @@
   * `p`: an instance of `java.nio.file.Path` or a `String`.
   * `ps`: further path components to join."
   [p & ps]
-  (if (instance? Path p)
+  {:pre [(or (path? p) (string? p))
+         (every? #(or (path? %) (string? %)) ps)]}
+  (if (string? p)
+    (recur (Paths/get p (make-array String 0)) ps)
     (reduce (fn [resolved x] (.resolve resolved x))
             p
-            ps)
-    (Paths/get p (into-array String ps))))
+            ps)))
 
 (defn get-cwd
   "Get the current working directory.

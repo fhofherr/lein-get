@@ -16,7 +16,19 @@
   (testing "join a path and multiple strings"
     (let [p (fs/path ".")
           p' (fs/path p "resources" "empty-file")]
-      (is (= (str p') "./resources/empty-file")))))
+      (is (= (str p') "./resources/empty-file"))))
+
+  (testing "join two paths"
+    (let [p (fs/path ".")
+          p' (fs/path "resources" "empty-file")
+          joined (fs/path p p')]
+      (is (= (str joined) "./resources/empty-file"))))
+
+  (testing "join a string and a path"
+    (let [s "."
+          p (fs/path "resources" "empty-file")
+          joined (fs/path s p)]
+      (is (= (str joined) "./resources/empty-file")))))
 
 (deftest identify-directories-and-files
   (let [dir-path (fs/path "." "resources")
