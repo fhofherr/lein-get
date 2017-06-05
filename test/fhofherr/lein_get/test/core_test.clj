@@ -88,8 +88,22 @@
                            :uri "../relative/path/on/file/system"}}]
         target-dir (fs/path project-root "checkouts" "some-dependency")]
 
+    (testing "ignore existing checkouts"
+      (let [exists? (stub-fn exists? [p] (= p target-dir))
+            checkout (stub-fn checkout [project-root scm-spec target-dir])
+            sh (stub-fn sh [working-dir cmd])]
+        (with-redefs [scm/checkout checkout
+                      io/sh sh
+                      fs/exists? exists?]
+          (core/get-typed-dependency project-root
+                                     (first dep-vec)
+                                     (last dep-vec))
+          (is (invoked? checkout :times 0))
+          (is (invoked? sh :times 0)))))
+
     (testing "symlink and install dependency"
-      (let [checkout (stub-fn checkout [project-root scm-spec target-dir])
+      (let [exists? (stub-fn exists? [p] false)
+            checkout (stub-fn checkout [project-root scm-spec target-dir])
             sh (stub-fn sh [working-dir cmd])]
         (with-redefs [scm/checkout checkout
                       io/sh sh]

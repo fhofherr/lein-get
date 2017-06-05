@@ -41,8 +41,9 @@
                      (name $)
                      (.replace $ "/" "-")
                      (fs/path project-root "checkouts" $))]
-    (scm/checkout project-root (:path dependency-spec) target-dir)
-    (io/sh target-dir "lein install")))
+    (when-not (fs/exists? target-dir)
+      (scm/checkout project-root (:path dependency-spec) target-dir)
+      (io/sh target-dir "lein install"))))
 
 (defn get-dependency
   "Obtain the dependency specified by `dependency-vector` if it contains
