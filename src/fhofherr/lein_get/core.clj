@@ -38,9 +38,9 @@
   :leiningen-checkout
   [project-root dependency-name dependency-spec]
   (let [target-dir (as-> dependency-name $
-                     (name $)
-                     (.replace $ "/" "-")
-                     (fs/path project-root "checkouts" $))]
+                         (name $)
+                         (.replace $ "/" "-")
+                         (fs/path project-root "checkouts" $))]
     (when-not (fs/exists? target-dir)
       (scm/checkout project-root (:path dependency-spec) target-dir)
       (io/sh target-dir "lein install"))))

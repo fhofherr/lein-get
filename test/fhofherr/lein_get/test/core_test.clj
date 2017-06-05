@@ -81,11 +81,11 @@
 (deftest get-leiningen-checkout-dependency
   (let [project-root "."
         dep-vec ['some-dependency
-                   "0.10.15"
-                   :get
-                   {:type :leiningen-checkout
-                    :path {:scm :file
-                           :uri "../relative/path/on/file/system"}}]
+                 "0.10.15"
+                 :get
+                 {:type :leiningen-checkout
+                  :path {:scm :file
+                         :uri "../relative/path/on/file/system"}}]
         target-dir (fs/path project-root "checkouts" "some-dependency")]
 
     (testing "ignore existing checkouts"

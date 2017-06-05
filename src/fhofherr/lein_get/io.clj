@@ -3,7 +3,6 @@
             [leiningen.core.eval :as lein-eval])
   (:import [java.nio.file Path]))
 
-
 (defn sh
   "Execute a command using `leiningen.core.eval/sh`
 
