@@ -1,6 +1,6 @@
 (ns fhofherr.lein-get.io
   (:require [clojure.string :refer [split]]
-            [leiningen.core.eval :as lein-eval])
+            [clojure.java.shell :as shell])
   (:import [java.nio.file Path]))
 
 (defn sh
@@ -20,5 +20,5 @@
   (let [cmdv (if (string? cmd)
                (split cmd #"\s+")
                cmd)]
-    (binding [lein-eval/*dir* (str working-dir)]
-      (apply lein-eval/sh cmdv))))
+    (shell/with-sh-dir (str working-dir)
+      (apply shell/sh cmdv))))

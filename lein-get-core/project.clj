@@ -1,11 +1,10 @@
-(defproject fhofherr/lein-get "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+(defproject fhofherr/lein-get-core "0.1.0-SNAPSHOT"
+  :description "Core library for fhofherr/lein-get"
   :url "https://github.com/fhofherr/lein-get"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
-  :eval-in-leiningen true
-  :plugins [[lein-codox "0.10.3"]
-            [lein-cljfmt "0.5.6"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :plugins [[lein-codox "0.10.3"]]
   :codox {:namespaces [#"^fhofherr\.lein-get\."]
           :metadata {:doc/format :markdown}}
   :profiles {:dev {:source-paths ["dev"]

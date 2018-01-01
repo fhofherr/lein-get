@@ -38,11 +38,12 @@
   :leiningen-checkout
   [project-root dependency-name dependency-spec]
   (let [target-dir (as-> dependency-name $
-                         (name $)
-                         (.replace $ "/" "-")
-                         (fs/path project-root "checkouts" $))]
+                     (name $)
+                     (.replace $ "/" "-")
+                     (fs/path project-root "checkouts" $))]
     (when-not (fs/exists? target-dir)
       (scm/checkout project-root (:path dependency-spec) target-dir)
+      ;; TODO log stdout of invoked command
       (io/sh target-dir "lein install"))))
 
 (defn get-dependency
@@ -71,4 +72,3 @@
                                                    dependency-spec)
       :else (throw (IllegalArgumentException.
                     "Depencency spec must be either string or map.")))))
-
