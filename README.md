@@ -110,6 +110,6 @@ Example:
 
 ## License
 
-Copyright © 2017 Ferdinand Hofherr
+Copyright © 2018 Ferdinand Hofherr
 
 Distributed under the MIT License.
